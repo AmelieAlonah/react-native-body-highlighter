@@ -99,7 +99,7 @@ const Body = ({
     let color;
 
     if (bodyPart.intensity) {
-      color = colors[bodyPart.intensity];
+      color = colors[bodyPart.intensity - 1];
     } else {
       color = bodyPart.color;
     }
@@ -132,32 +132,34 @@ const Body = ({
 
           const leftPaths = (bodyPart.path?.left || []).map((path) => {
             const isOnlyRight =
-              data.find((d) => d.slug === bodyPart.slug)?.side === "right";
+                data.find((d) => d.slug === bodyPart.slug)?.side === "right"; // Vérifie si c'est seulement le côté droit
 
             return (
-              <Path
-                key={path}
-                onPress={() => onBodyPartPress?.(bodyPart, "left")}
-                id={bodyPart.slug}
-                fill={isOnlyRight ? "#3f3f3f" : getColorToFill(bodyPart)}
-                d={path}
-              />
+                <Path
+                    key={path}
+                    onPress={() => onBodyPartPress?.(bodyPart, "left")}
+                    id={`${bodyPart.slug}-left`} // Ajout d'un ID unique pour éviter les conflits
+                    fill={isOnlyRight ? "#3f3f3f" : getColorToFill(bodyPart)} // Applique la couleur
+                    d={path}
+                />
             );
           });
+
           const rightPaths = (bodyPart.path?.right || []).map((path) => {
             const isOnlyLeft =
-              data.find((d) => d.slug === bodyPart.slug)?.side === "left";
+                data.find((d) => d.slug === bodyPart.slug)?.side === "left"; // Vérifie si c'est seulement le côté gauche
 
             return (
-              <Path
-                key={path}
-                onPress={() => onBodyPartPress?.(bodyPart, "right")}
-                id={bodyPart.slug}
-                fill={isOnlyLeft ? "#3f3f3f" : getColorToFill(bodyPart)}
-                d={path}
-              />
+                <Path
+                    key={path}
+                    onPress={() => onBodyPartPress?.(bodyPart, "right")}
+                    id={`${bodyPart.slug}-right`} // Ajout d'un ID unique pour éviter les conflits
+                    fill={isOnlyLeft ? "#3f3f3f" : getColorToFill(bodyPart)} // Applique la couleur
+                    d={path}
+                />
             );
           });
+
 
           return [...commonPaths, ...leftPaths, ...rightPaths];
         })}
